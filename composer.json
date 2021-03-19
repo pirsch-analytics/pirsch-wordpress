@@ -1,0 +1,5 @@
+{
+    "require": {
+        "pirsch-analytics/sdk": "^1.0"
+    }
+}

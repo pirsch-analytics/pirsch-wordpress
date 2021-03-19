@@ -1,0 +1,63 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "880b21940f85c0863c0d749351fcfdfc",
+    "packages": [
+        {
+            "name": "pirsch-analytics/sdk",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pirsch-analytics/pirsch-php-sdk.git",
+                "reference": "cae8a45af0be5ff12024cc3b7631b66a759a53ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pirsch-analytics/pirsch-php-sdk/zipball/cae8a45af0be5ff12024cc3b7631b66a759a53ce",
+                "reference": "cae8a45af0be5ff12024cc3b7631b66a759a53ce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marvin Blum",
+                    "email": "marvin.blum@emvi.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Client SDK for Pirsch.",
+            "homepage": "https://pirsch.io/",
+            "keywords": [
+                "analytics",
+                "api",
+                "client",
+                "pirsch",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/pirsch-analytics/pirsch-php-sdk/issues",
+                "source": "https://github.com/pirsch-analytics/pirsch-php-sdk/tree/v1.0.0"
+            },
+            "time": "2021-03-18T22:26:34+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
+}
