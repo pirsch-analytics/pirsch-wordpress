@@ -8,22 +8,27 @@
     "packages": [
         {
             "name": "pirsch-analytics/sdk",
-            "version": "v1.0.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pirsch-analytics/pirsch-php-sdk.git",
-                "reference": "cae8a45af0be5ff12024cc3b7631b66a759a53ce"
+                "reference": "2dbaab6817e63520960062946c040466d974f1d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pirsch-analytics/pirsch-php-sdk/zipball/cae8a45af0be5ff12024cc3b7631b66a759a53ce",
-                "reference": "cae8a45af0be5ff12024cc3b7631b66a759a53ce",
+                "url": "https://api.github.com/repos/pirsch-analytics/pirsch-php-sdk/zipball/2dbaab6817e63520960062946c040466d974f1d6",
+                "reference": "2dbaab6817e63520960062946c040466d974f1d6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
             },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Pirsch\\": "src/"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -46,9 +51,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pirsch-analytics/pirsch-php-sdk/issues",
-                "source": "https://github.com/pirsch-analytics/pirsch-php-sdk/tree/v1.0.0"
+                "source": "https://github.com/pirsch-analytics/pirsch-php-sdk/tree/v1.1.1"
             },
-            "time": "2021-03-18T22:26:34+00:00"
+            "time": "2021-03-19T15:51:55+00:00"
         }
     ],
     "packages-dev": [],

@@ -15,6 +15,8 @@ if(!defined('WPINC')) {
 	die;
 }
 
+require __DIR__.'/vendor/autoload.php';
+
 function pirsch_analytics_activate() {
 
 }
@@ -111,8 +113,26 @@ function pirsch_analytics_remove_settings_page() {
 	remove_menu_page('pirsch_analytics_page');
 }
 
+function pirsch_analytics_middleware() {
+	try {
+		if(!is_admin()) {
+			$hostname = get_option('pirsch_analytics_hostname');
+			$clientID = get_option('pirsch_analytics_client_id');
+			$clientSecret = get_option('pirsch_analytics_client_secret');
+
+			if(!empty($hostname) && !empty($clientID) && !empty($clientSecret)) {
+				$client = new Pirsch\Client($clientID, $clientSecret, $hostname);
+				$client->hit();
+			}
+		}
+	} catch(Exception $e) {
+		error_log($e->getMessage());
+	}
+}
+
 register_activation_hook(__FILE__, 'pirsch_analytics_activate');
 register_deactivation_hook(__FILE__, 'pirsch_analytics_deactivate');
 add_action('admin_init', 'pirsch_analytics_settings_page_init');
 add_action('admin_menu', 'pirsch_analytics_add_settings_page');
 add_action('admin_menu', 'pirsch_analytics_remove_settings_page', 99);
+add_action('init', 'pirsch_analytics_middleware');
