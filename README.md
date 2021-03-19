@@ -1,6 +1,6 @@
 # Pirsch WordPress
 
-The official Wordpress Plugin for Pirsch.
+The official Wordpress Plugin for Pirsch Analytics.
 
 ## Usage
 
