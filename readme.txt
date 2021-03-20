@@ -8,19 +8,26 @@ Stable tag: 1.0.0
 License: MIT
 License URI: https://github.com/pirsch-analytics/pirsch-wordpress/blob/master/LICENSE
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+The official Wordpress Plugin for Pirsch Analytics.
 
 == Description ==
 
-The official Wordpress Plugin for Pirsch Analytics.
+Pirsch is a simple, privacy-friendly, open-source web analytics tool. It's lightweight, cookie-free and easily integrates into your WordPress installation, without using JavaScript. It does not collect data that can be uniquely assigned to a user, but instead shows aggregated statistics. Find out more [here](https://docs.pirsch.io/privacy/) on how that works.
 
 == Installation ==
 
-To use this plugin, you will have to create an account at https://pirsch.io/ and set up a website. Create a client ID and secret and configure it on the plugins settings page in WordPress. For details, please check out our [documentation](https://docs.pirsch.io/).
+To use this plugin, you will have to create an account at https://pirsch.io/ and set up a website. Create a client ID and secret from the dashboards settings page and set them in WordPress on the plugin page (Tools > Pirsch Analytics). It won't analyze your website traffic until you have provided the client details.
 
-== Terms of Use and Privacy Policy ==
+For more information, please read our [documentation](https://docs.pirsch.io/).
 
-Please refer to our website for our [terms of use](https://pirsch.io/terms) and [privacy policy](https://pirsch.io/privacy). Responsible for this plugin is the [Emvi Software GmbH](https://pirsch.io/legal).
+== Terms and Conditiions, Privacy Policy ==
+
+Please refer to our website for our [terms and conditions](https://pirsch.io/terms) and [privacy policy](https://pirsch.io/privacy). Responsible for this plugin is [Emvi Software GmbH](https://pirsch.io/legal).
+
+== Screenshots ==
+ 
+1. The Pirsch Analytics dashboard.
+2. The plugin configuration page.
 
 == Changelog ==
 
