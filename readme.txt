@@ -20,7 +20,7 @@ To use this plugin, you will have to create an account at https://pirsch.io/ and
 
 For more information, please read our [documentation](https://docs.pirsch.io/).
 
-== Terms and Conditiions, Privacy Policy ==
+== Terms and Conditions, Privacy Policy ==
 
 Please refer to our website for our [terms and conditions](https://pirsch.io/terms) and [privacy policy](https://pirsch.io/privacy). Responsible for this plugin is [Emvi Software GmbH](https://pirsch.io/legal).
 
