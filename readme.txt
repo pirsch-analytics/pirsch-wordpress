@@ -27,7 +27,7 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 == Screenshots ==
  
 1. The Pirsch Analytics dashboard.
-2. The plugin configuration page.
+2. Manage as many websites as you want and get detailed insights into your statistics.
 
 == Changelog ==
 
