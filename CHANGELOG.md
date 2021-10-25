@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+* updated SDK
+* ignore /wp-... pages
+
 ## 1.0.2
 
 * updated SDK

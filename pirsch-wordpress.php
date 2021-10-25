@@ -3,7 +3,7 @@
  * Plugin Name:       Pirsch Analytics
  * Plugin URI:        https://pirsch.io/
  * Description:       Connect your Wordpress website to Pirsch Analytics.
- * Version:           1.0.2
+ * Version:           1.1.0
  * Requires at least: 5.2
  * Requires PHP:      7.4
  * Author:            Emvi Software GmbH
@@ -17,9 +17,7 @@ if(!defined('WPINC')) {
 
 require __DIR__.'/vendor/autoload.php';
 
-function pirsch_analytics_activate() {
-
-}
+function pirsch_analytics_activate() {}
 
 function pirsch_analytics_deactivate() {
 	delete_option('pirsch_analytics_hostname');
@@ -115,7 +113,7 @@ function pirsch_analytics_remove_settings_page() {
 
 function pirsch_analytics_middleware() {
 	try {
-		if(!is_admin()) {
+		if(!is_admin() && !pirsch_analytics_is_wp_site()) {
 			$hostname = get_option('pirsch_analytics_hostname');
 			$clientID = get_option('pirsch_analytics_client_id');
 			$clientSecret = get_option('pirsch_analytics_client_secret');
@@ -128,6 +126,11 @@ function pirsch_analytics_middleware() {
 	} catch(Exception $e) {
 		error_log($e->getMessage());
 	}
+}
+
+function pirsch_analytics_is_wp_site() {
+	$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+	return str_starts_with($path, '/wp-');
 }
 
 register_activation_hook(__FILE__, 'pirsch_analytics_activate');
