@@ -130,7 +130,7 @@ function pirsch_analytics_middleware() {
 
 function pirsch_analytics_is_wp_site() {
 	$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-	return str_starts_with($path, '/wp-');
+	return strpos($path, '/wp-') !== false;
 }
 
 register_activation_hook(__FILE__, 'pirsch_analytics_activate');

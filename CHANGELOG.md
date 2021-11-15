@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+* updated SDK
+* fixed str_starts_with
+
 ## 1.1.0
 
 * updated SDK
