@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+* fixed plugin version number
+
 ## 1.1.1
 
 * updated SDK
