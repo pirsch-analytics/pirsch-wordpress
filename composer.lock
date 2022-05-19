@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "pirsch-analytics/sdk",
-            "version": "v1.4.1",
+            "version": "v1.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pirsch-analytics/pirsch-php-sdk.git",
-                "reference": "9412480c38b51e2182ed8da78c022828a567a052"
+                "reference": "e3fe89b1a92e734fc5ff879019937e858cd0f86f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pirsch-analytics/pirsch-php-sdk/zipball/9412480c38b51e2182ed8da78c022828a567a052",
-                "reference": "9412480c38b51e2182ed8da78c022828a567a052",
+                "url": "https://api.github.com/repos/pirsch-analytics/pirsch-php-sdk/zipball/e3fe89b1a92e734fc5ff879019937e858cd0f86f",
+                "reference": "e3fe89b1a92e734fc5ff879019937e858cd0f86f",
                 "shasum": ""
             },
             "require": {
@@ -51,9 +51,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pirsch-analytics/pirsch-php-sdk/issues",
-                "source": "https://github.com/pirsch-analytics/pirsch-php-sdk/tree/v1.4.1"
+                "source": "https://github.com/pirsch-analytics/pirsch-php-sdk/tree/v1.6.4"
             },
-            "time": "2021-11-11T14:19:12+00:00"
+            "time": "2022-05-05T11:08:40+00:00"
         }
     ],
     "packages-dev": [],
@@ -64,5 +64,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

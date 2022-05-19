@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+* updated SDK
+* improved /wp-... site filter
+
 ## 1.1.2
 
 * fixed plugin version number
