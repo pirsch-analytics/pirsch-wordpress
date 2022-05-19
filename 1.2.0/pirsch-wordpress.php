@@ -129,7 +129,7 @@ function pirsch_analytics_middleware() {
 }
 
 function pirsch_analytics_is_wp_site() {
-	$pattern = "/\/*wp-.*/i";
+	$pattern = /\/*wp-.*/i;
 	$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 	return preg_match($pattern, $path) === 1;
 }
