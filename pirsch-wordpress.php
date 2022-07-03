@@ -68,8 +68,12 @@ function pirsch_analytics_settings_page_init() {
 }
 
 function pirsch_analytics_settings_callback() {
-	echo '<p>Use the hostname you configured on the Pirsch dashboard for your website (e.g. example.com). To gain a client ID and secret, navigate to the Pirsch dashboard, click on settings, and create a new client. You can also use a single access token and skip the client ID. Read our <a href="https://docs.pirsch.io/get-started/backend-integration/" target="_blank">backend integration</a> for details.</p>';
-	echo '<p>The header is optional and should only be set when WordPress is running behind a proxy or load balancer. Pirsch requires the real visitor IP address, so you must provide the right header. Options are: CF-Connecting-IP, True-Client-IP, X-Forwarded-For, Forwarded, X-Real-IP.</p>';
+	echo '<p>Use the hostname you configured on the Pirsch dashboard for your website (e.g. example.com).
+		To gain a client ID and secret, navigate to the Pirsch dashboard, click on settings, and create a new client.
+		<strong>You can also use a single access token and skip the client ID.</strong> Read our <a href="https://docs.pirsch.io/get-started/backend-integration/" target="_blank">backend integration</a> for details.</p>';
+	echo '<p>The header is optional and should only be set when WordPress is running behind a proxy or load balancer.
+		Pirsch requires the real visitor IP address, so you must provide the right header.<br />
+		Options are: CF-Connecting-IP, True-Client-IP, X-Forwarded-For, Forwarded, X-Real-IP.</p>';
 }
 
 function pirsch_analytics_hostname_callback() {
