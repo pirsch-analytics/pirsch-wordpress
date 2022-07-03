@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0
+
+* added support for single access tokens
+* added new option to configure a header when behind a proxy or load balancer
+* updated SDK
+* updated screenshots
+
 ## 1.2.0
 
 * updated SDK
