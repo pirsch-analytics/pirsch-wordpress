@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+* added support for base URL
+* updated SDK
+
 ## 1.3.0
 
 * added support for single access tokens

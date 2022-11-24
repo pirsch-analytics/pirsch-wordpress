@@ -3,7 +3,7 @@
  * Plugin Name:       Pirsch Analytics
  * Plugin URI:        https://pirsch.io/
  * Description:       Connect your Wordpress website to Pirsch Analytics.
- * Version:           1.3.0
+ * Version:           1.4.0
  * Requires at least: 5.2
  * Requires PHP:      7.4
  * Author:            Emvi Software GmbH
@@ -80,6 +80,7 @@ function pirsch_analytics_settings_callback() {
 	echo '<p>Use the hostname you configured on the Pirsch dashboard for your website (e.g. example.com).
 		To gain a client ID and secret, navigate to the Pirsch dashboard, click on settings, and create a new client.
 		<strong>You can also use a single access token and skip the client ID.</strong> Read our <a href="https://docs.pirsch.io/get-started/backend-integration/" target="_blank">backend integration</a> for details.</p>';
+	echo '<p>The base URL is optional and only required if you use a Pirsch proxy.</p>';
 	echo '<p>The header is optional and should only be set when WordPress is running behind a proxy or load balancer.
 		Pirsch requires the real visitor IP address, so you must provide the right header.<br />
 		Options are: CF-Connecting-IP, True-Client-IP, X-Forwarded-For, Forwarded, X-Real-IP.</p>';
@@ -146,23 +147,23 @@ function pirsch_analytics_remove_settings_page() {
 
 function pirsch_analytics_middleware() {
 	try {
-		if(!is_admin() && !pirsch_analytics_is_wp_site()) {
+		if (!is_admin() && !pirsch_analytics_is_wp_site()) {
 			$baseURL = get_option('pirsch_analytics_base_url');
 			$hostname = get_option('pirsch_analytics_hostname');
 			$clientID = get_option('pirsch_analytics_client_id');
 			$clientSecret = get_option('pirsch_analytics_client_secret');
 			$header = get_option('pirsch_analytics_header');
 
-			if (is_empty($baseURL)) {
+			if (empty($baseURL)) {
 				$baseURL = Pirsch\Client::DEFAULT_BASE_URL;
 			}
 
-			if(!empty($hostname) && !empty($clientSecret)) {
+			if (!empty($hostname) && !empty($clientSecret)) {
 				$client = new Pirsch\Client($clientID, $clientSecret, $hostname, $baseURL);
 				$options = new Pirsch\HitOptions();
 
-				if(!empty($header)) {
-					switch(strtolower($header)) {
+				if (!empty($header)) {
+					switch (strtolower($header)) {
 						case 'cf-connecting-ip':
 							$options->ip = parseXForwardedFor($_SERVER['HTTP_CF_CONNECTING_IP']);
 							break;
@@ -199,7 +200,7 @@ function parseXForwardedFor($header) {
 	$parts = explode(',', $header);
 	$n = count($parts);
 
-	if($n > 0) {
+	if ($n > 0) {
 		return $parats[$n-1];
 	}
 
@@ -210,13 +211,13 @@ function parseForwardedHeader($header) {
 	$parts = explode(',', $header);
 	$n = count($parts);
 
-	if($n > 0) {
+	if ($n > 0) {
 		$parts = explode(';', $parts[$n-1]);
 
-		foreach($parts as $part) {
+		foreach ($parts as $part) {
 			$kv = explode('=', $part, 1);
 
-			if(count($kv) == 2 && $kv[0] == 'for') {
+			if (count($kv) == 2 && $kv[0] == 'for') {
 				return $kv[1];
 			}
 		}

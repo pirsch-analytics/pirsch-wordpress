@@ -4,7 +4,7 @@ Tags: pirsch, analytics, sdk, client, api
 Requires at least: 5.1
 Tested up to: 6.0
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: MIT
 License URI: https://github.com/pirsch-analytics/pirsch-wordpress/blob/master/LICENSE
 
@@ -30,6 +30,11 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 2. Manage as many websites as you want and get detailed insights into your statistics.
 
 == Changelog ==
+
+= 1.4.0 =
+
+- added support for base URL
+- updated SDK
 
 = 1.3.0 =
 
