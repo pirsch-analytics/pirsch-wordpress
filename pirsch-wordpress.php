@@ -154,7 +154,7 @@ function pirsch_analytics_middleware() {
 			$header = get_option('pirsch_analytics_header');
 
 			if (is_empty($baseURL)) {
-				$baseURL = Client::DEFAULT_BASE_URL;
+				$baseURL = Pirsch\Client::DEFAULT_BASE_URL;
 			}
 
 			if(!empty($hostname) && !empty($clientSecret)) {
