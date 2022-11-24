@@ -153,6 +153,10 @@ function pirsch_analytics_middleware() {
 			$clientSecret = get_option('pirsch_analytics_client_secret');
 			$header = get_option('pirsch_analytics_header');
 
+			if (is_empty($baseURL)) {
+				$baseURL = Client::DEFAULT_BASE_URL;
+			}
+
 			if(!empty($hostname) && !empty($clientSecret)) {
 				$client = new Pirsch\Client($clientID, $clientSecret, $hostname, $baseURL);
 				$options = new Pirsch\HitOptions();
