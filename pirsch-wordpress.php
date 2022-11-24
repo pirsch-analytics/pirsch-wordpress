@@ -20,6 +20,7 @@ require __DIR__.'/vendor/autoload.php';
 function pirsch_analytics_activate() {}
 
 function pirsch_analytics_deactivate() {
+	delete_option('pirsch_analytics_base_url');
 	delete_option('pirsch_analytics_hostname');
 	delete_option('pirsch_analytics_client_id');
 	delete_option('pirsch_analytics_client_secret');
@@ -27,6 +28,7 @@ function pirsch_analytics_deactivate() {
 }
 
 function pirsch_analytics_settings_page_init() {
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_base_url');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_hostname');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_id');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_secret');
@@ -37,6 +39,13 @@ function pirsch_analytics_settings_page_init() {
 		'pirsch_analytics_settings_callback',
 		'pirsch_analytics_page'
     );
+	add_settings_field(
+		'pirsch_analytics_base_url',
+		__('Base URL', 'pirsch_analytics'),
+		'pirsch_analytics_base_url_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_page'
+	);
 	add_settings_field(
 		'pirsch_analytics_hostname',
 		__('Hostname', 'pirsch_analytics'),
@@ -74,6 +83,11 @@ function pirsch_analytics_settings_callback() {
 	echo '<p>The header is optional and should only be set when WordPress is running behind a proxy or load balancer.
 		Pirsch requires the real visitor IP address, so you must provide the right header.<br />
 		Options are: CF-Connecting-IP, True-Client-IP, X-Forwarded-For, Forwarded, X-Real-IP.</p>';
+}
+
+function pirsch_analytics_base_url_callback() {
+	$baseURL = get_option('pirsch_analytics_base_url', '');
+	echo '<input type="text" name="pirsch_analytics_base_url" value="' . esc_attr($baseURL) . '" />';
 }
 
 function pirsch_analytics_hostname_callback() {
@@ -133,13 +147,14 @@ function pirsch_analytics_remove_settings_page() {
 function pirsch_analytics_middleware() {
 	try {
 		if(!is_admin() && !pirsch_analytics_is_wp_site()) {
+			$baseURL = get_option('pirsch_analytics_base_url');
 			$hostname = get_option('pirsch_analytics_hostname');
 			$clientID = get_option('pirsch_analytics_client_id');
 			$clientSecret = get_option('pirsch_analytics_client_secret');
 			$header = get_option('pirsch_analytics_header');
 
 			if(!empty($hostname) && !empty($clientSecret)) {
-				$client = new Pirsch\Client($clientID, $clientSecret, $hostname);
+				$client = new Pirsch\Client($clientID, $clientSecret, $hostname, $baseURL);
 				$options = new Pirsch\HitOptions();
 
 				if(!empty($header)) {
