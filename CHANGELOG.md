@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.4
+
+* added missing delimiter and modifier to path filter
+
 ## 1.5.3
 
 * fixed path filter separator

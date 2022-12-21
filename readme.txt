@@ -4,7 +4,7 @@ Tags: pirsch, analytics, sdk, client, api
 Requires at least: 5.1
 Tested up to: 6.1
 Requires PHP: 7.4
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: MIT
 License URI: https://github.com/pirsch-analytics/pirsch-wordpress/blob/master/LICENSE
 
@@ -30,6 +30,10 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 2. Manage as many websites as you want and get detailed insights into your statistics.
 
 == Changelog ==
+
+= 1.5.4 =
+
+- added missing delimiter and modifier to path filter
 
 = 1.5.3 =
 
