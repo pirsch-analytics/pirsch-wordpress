@@ -216,7 +216,7 @@ function pirsch_analytics_is_excluded() {
 	$patterns = explode(',', get_option('pirsch_analytics_path_filter'));
 
 	foreach ($patterns as $pattern) {
-		if (preg_match('/'.$pattern.'/gU', $_SERVER['REQUEST_URI'])) {
+		if (preg_match('/'.$pattern.'/U', $_SERVER['REQUEST_URI'])) {
 			return true;
 		}
 	}
