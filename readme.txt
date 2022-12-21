@@ -31,6 +31,10 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 
 == Changelog ==
 
+= 1.5.1 =
+
+- fixed settings
+
 = 1.5.0 =
 
 - added the option to filter pages/files using regular expressions

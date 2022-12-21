@@ -3,7 +3,7 @@
  * Plugin Name:       Pirsch Analytics
  * Plugin URI:        https://pirsch.io/
  * Description:       Connect your Wordpress website to Pirsch Analytics.
- * Version:           1.5.0
+ * Version:           1.5.1
  * Requires at least: 5.2
  * Requires PHP:      7.4
  * Author:            Emvi Software GmbH
@@ -75,9 +75,9 @@ function pirsch_analytics_settings_page_init() {
 		'pirsch_analytics_page'
 	);
 	add_settings_field(
-		'pirsch_analytics_ignore_path',
+		'pirsch_analytics_path_filter',
 		__('Path Filter', 'pirsch_analytics'),
-		'pirsch_analytics_ignore_path_callback',
+		'pirsch_analytics_path_filter_callback',
 		'pirsch_analytics_page',
 		'pirsch_analytics_page'
 	);
@@ -101,7 +101,7 @@ function pirsch_analytics_base_url_callback() {
 }
 
 function pirsch_analytics_hostname_callback() {
-	$value = get_option('pirsch_analytics_value', '');
+	$value = get_option('pirsch_analytics_hostname', '');
 	echo '<input type="text" name="pirsch_analytics_hostname" value="'.esc_attr($value).'" />';
 }
 
@@ -120,9 +120,9 @@ function pirsch_analytics_client_secret_callback() {
 	echo '<input type="password" name="pirsch_analytics_client_secret" value="'.esc_attr($value).'" />';
 }
 
-function pirsch_analytics_ignore_path_callback() {
-	$value = get_option('pirsch_analytics_ignore_path', '');
-	echo '<input type="text" name="pirsch_analytics_ignore_path" value="'.esc_attr($value).'" />';
+function pirsch_analytics_path_filter_callback() {
+	$value = get_option('pirsch_analytics_path_filter', '');
+	echo '<input type="text" name="pirsch_analytics_path_filter" value="'.esc_attr($value).'" />';
 }
 
 function pirsch_analytics_settings_page_html() {
@@ -211,7 +211,7 @@ function pirsch_analytics_is_wp_site() {
 }
 
 function pirsch_analytics_is_excluded() {
-	$patterns = explode(' ', get_option('pirsch_analytics_ignore_path'));
+	$patterns = explode(' ', get_option('pirsch_analytics_path_filter'));
 
 	foreach ($patterns as $pattern) {
 		if (preg_match($pattern, $_SERVER['REQUEST_URI'])) {
