@@ -31,6 +31,10 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 
 == Changelog ==
 
+= 1.5.3 =
+
+- fixed path filter separator
+
 = 1.5.2 =
 
 - fixed missing settings for path filter

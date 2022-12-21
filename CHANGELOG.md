@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.3
+
+* fixed path filter separator
+
 ## 1.5.2
 
 * fixed missing settings for path filter
