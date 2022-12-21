@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0
+
+* added the option to filter pages/files using regular expressions
+* added link to settings page
+* fixed parsing X-Forwarded-For
+
 ## 1.4.0
 
 * added support for base URL

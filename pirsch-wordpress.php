@@ -3,7 +3,7 @@
  * Plugin Name:       Pirsch Analytics
  * Plugin URI:        https://pirsch.io/
  * Description:       Connect your Wordpress website to Pirsch Analytics.
- * Version:           1.4.0
+ * Version:           1.5.0
  * Requires at least: 5.2
  * Requires PHP:      7.4
  * Author:            Emvi Software GmbH
@@ -74,41 +74,55 @@ function pirsch_analytics_settings_page_init() {
 		'pirsch_analytics_page',
 		'pirsch_analytics_page'
 	);
+	add_settings_field(
+		'pirsch_analytics_ignore_path',
+		__('Path Filter', 'pirsch_analytics'),
+		'pirsch_analytics_ignore_path_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_page'
+	);
 }
 
 function pirsch_analytics_settings_callback() {
 	echo '<p>Use the hostname you configured on the Pirsch dashboard for your website (e.g. example.com).
 		To gain a client ID and secret, navigate to the Pirsch dashboard, click on settings, and create a new client.
 		<strong>You can also use a single access token and skip the client ID.</strong> Read our <a href="https://docs.pirsch.io/get-started/backend-integration/" target="_blank">backend integration</a> for details.</p>';
-	echo '<p>The base URL is optional and only required if you use a Pirsch proxy.</p>';
+	echo '<p>The base URL is optional and only required if you use a Pirsch proxy server.</p>';
 	echo '<p>The header is optional and should only be set when WordPress is running behind a proxy or load balancer.
 		Pirsch requires the real visitor IP address, so you must provide the right header.<br />
 		Options are: CF-Connecting-IP, True-Client-IP, X-Forwarded-For, Forwarded, X-Real-IP.</p>';
+	echo '<p>The path filter can be used to exclude pages and files. Enter a comma separated list of <a href="https://www.php.net/manual/en/reference.pcre.pattern.syntax.php" target="_blank">regular expressions</a>, to filter unwanted page views.</p>';
+	echo '<p><a href="https://dashboard.pirsch.io/settings" target="_blank">Go to the Pirsch settings page</a></p>';
 }
 
 function pirsch_analytics_base_url_callback() {
-	$baseURL = get_option('pirsch_analytics_base_url', '');
-	echo '<input type="text" name="pirsch_analytics_base_url" value="' . esc_attr($baseURL) . '" />';
+	$value = get_option('pirsch_analytics_base_url', '');
+	echo '<input type="text" name="pirsch_analytics_base_url" value="' . esc_attr($value) . '" />';
 }
 
 function pirsch_analytics_hostname_callback() {
-	$hostname = get_option('pirsch_analytics_hostname', '');
-	echo '<input type="text" name="pirsch_analytics_hostname" value="'.esc_attr($hostname).'" />';
+	$value = get_option('pirsch_analytics_value', '');
+	echo '<input type="text" name="pirsch_analytics_hostname" value="'.esc_attr($value).'" />';
 }
 
 function pirsch_analytics_client_id_callback() {
-	$hostname = get_option('pirsch_analytics_client_id', '');
-	echo '<input type="text" name="pirsch_analytics_client_id" value="'.esc_attr($hostname).'" />';
+	$value = get_option('pirsch_analytics_client_id', '');
+	echo '<input type="text" name="pirsch_analytics_client_id" value="'.esc_attr($value).'" />';
 }
 
 function pirsch_analytics_header_callback() {
-	$header = get_option('pirsch_analytics_header', '');
-	echo '<input type="text" name="pirsch_analytics_header" value="'.esc_attr($header).'" />';
+	$value = get_option('pirsch_analytics_header', '');
+	echo '<input type="text" name="pirsch_analytics_header" value="'.esc_attr($value).'" />';
 }
 
 function pirsch_analytics_client_secret_callback() {
-	$hostname = get_option('pirsch_analytics_client_secret', '');
-	echo '<input type="password" name="pirsch_analytics_client_secret" value="'.esc_attr($hostname).'" />';
+	$value = get_option('pirsch_analytics_client_secret', '');
+	echo '<input type="password" name="pirsch_analytics_client_secret" value="'.esc_attr($value).'" />';
+}
+
+function pirsch_analytics_ignore_path_callback() {
+	$value = get_option('pirsch_analytics_ignore_path', '');
+	echo '<input type="text" name="pirsch_analytics_ignore_path" value="'.esc_attr($value).'" />';
 }
 
 function pirsch_analytics_settings_page_html() {
@@ -147,7 +161,7 @@ function pirsch_analytics_remove_settings_page() {
 
 function pirsch_analytics_middleware() {
 	try {
-		if (!is_admin() && !pirsch_analytics_is_wp_site()) {
+		if (!is_admin() && !pirsch_analytics_is_wp_site() && !pirsch_analytics_is_excluded()) {
 			$baseURL = get_option('pirsch_analytics_base_url');
 			$hostname = get_option('pirsch_analytics_hostname');
 			$clientID = get_option('pirsch_analytics_client_id');
@@ -165,16 +179,16 @@ function pirsch_analytics_middleware() {
 				if (!empty($header)) {
 					switch (strtolower($header)) {
 						case 'cf-connecting-ip':
-							$options->ip = parseXForwardedFor($_SERVER['HTTP_CF_CONNECTING_IP']);
+							$options->ip = pirsch_analytics_parse_x_forwarded_for($_SERVER['HTTP_CF_CONNECTING_IP']);
 							break;
 						case 'true-client-ip':
-							$options->ip = parseXForwardedFor($_SERVER['HTTP_TRUE_CLIENT_IP']);
+							$options->ip = pirsch_analytics_parse_x_forwarded_for($_SERVER['HTTP_TRUE_CLIENT_IP']);
 							break;
 						case 'x-forwarded-for':
-							$options->ip = parseXForwardedFor($_SERVER['HTTP_X_FORWARDED_FOR']);
+							$options->ip = pirsch_analytics_parse_x_forwarded_for($_SERVER['HTTP_X_FORWARDED_FOR']);
 							break;
 						case 'forwarded':
-							$options->ip = parseForwardedHeader($_SERVER['HTTP_FORWARDED']);
+							$options->ip = pirsch_analytics_parse_forwarded_header($_SERVER['HTTP_FORWARDED']);
 							break;
 						case 'x-real-ip':
 							$options->ip = $_SERVER['HTTP_X_REAL_IP'];
@@ -196,18 +210,30 @@ function pirsch_analytics_is_wp_site() {
 	return preg_match($pattern, $path) === 1;
 }
 
-function parseXForwardedFor($header) {
+function pirsch_analytics_is_excluded() {
+	$patterns = explode(' ', get_option('pirsch_analytics_ignore_path'));
+
+	foreach ($patterns as $pattern) {
+		if (preg_match($pattern, $_SERVER['REQUEST_URI'])) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function pirsch_analytics_parse_x_forwarded_for($header) {
 	$parts = explode(',', $header);
 	$n = count($parts);
 
 	if ($n > 0) {
-		return $parats[$n-1];
+		return $parts[$n-1];
 	}
 
 	return '';
 }
 
-function parseForwardedHeader($header) {
+function pirsch_analytics_parse_forwarded_header($header) {
 	$parts = explode(',', $header);
 	$n = count($parts);
 
