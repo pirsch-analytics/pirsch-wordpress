@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.5
+
+* fixed tracking page views when path filter is left empty
+
 ## 1.5.4
 
 * added missing delimiter and modifier to path filter
