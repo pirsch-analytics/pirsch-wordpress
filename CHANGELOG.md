@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0
+
+* added support for client hints
+* removed base URL
+* updated SDK
+
 ## 1.5.5
 
 * fixed tracking page views when path filter is left empty
