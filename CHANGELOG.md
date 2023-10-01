@@ -2,8 +2,7 @@
 
 ## 1.6.1
 
-* fixed extending sessions
-* improved error handling
+* updated SDK
 
 ## 1.6.0
 
