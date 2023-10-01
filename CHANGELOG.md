@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.2
+
+* updated SDK
+
 ## 1.6.1
 
 * updated SDK
