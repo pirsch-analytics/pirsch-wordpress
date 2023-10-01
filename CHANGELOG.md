@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1
+
+* fixed extending sessions
+* improved error handling
+
 ## 1.6.0
 
 * added support for client hints
