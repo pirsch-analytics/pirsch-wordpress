@@ -1,14 +1,6 @@
 # Changelog
 
-## 1.6.2
-
-* updated SDK
-
-## 1.6.1
-
-* updated SDK
-
-## 1.6.0
+## 1.6.3
 
 * added support for client hints
 * removed base URL
