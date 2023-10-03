@@ -4,7 +4,7 @@
 
 The official Wordpress Plugin for Pirsch Analytics.
 
-## Usage
+## Usage and Changelog
 
 Please refer to the [readme.txt](readme.txt).
 
