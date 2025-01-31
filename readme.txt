@@ -34,6 +34,8 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 = 1.7.0 =
 
 - upgraded to latest Wordpress version
+- upgraded to Pirsch SDK version 2
+- removed hostname field (no longer required)
 - updated dependencies
 
 = 1.6.4 =

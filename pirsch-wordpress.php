@@ -20,17 +20,14 @@ require __DIR__.'/vendor/autoload.php';
 function pirsch_analytics_activate() {}
 
 function pirsch_analytics_deactivate() {
-	delete_option('pirsch_analytics_base_url'); // deprecated
-	delete_option('pirsch_analytics_hostname');
-	delete_option('pirsch_analytics_client_id'); // deprecated
+	delete_option('pirsch_analytics_client_id');
 	delete_option('pirsch_analytics_client_secret');
 	delete_option('pirsch_analytics_header');
 	delete_option('pirsch_analytics_path_filter');
 }
 
 function pirsch_analytics_settings_page_init() {
-	register_setting('pirsch_analytics_page', 'pirsch_analytics_hostname');
-	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_id'); // deprecated
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_id');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_secret');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_header');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_path_filter');
@@ -40,13 +37,6 @@ function pirsch_analytics_settings_page_init() {
 		'pirsch_analytics_settings_callback',
 		'pirsch_analytics_page'
     );
-	add_settings_field(
-		'pirsch_analytics_hostname',
-		__('Hostname', 'pirsch_analytics'),
-		'pirsch_analytics_hostname_callback',
-		'pirsch_analytics_page',
-		'pirsch_analytics_page'
-	);
 	add_settings_field(
 		'pirsch_analytics_client_id',
 		__('Client ID', 'pirsch_analytics'),
@@ -78,19 +68,13 @@ function pirsch_analytics_settings_page_init() {
 }
 
 function pirsch_analytics_settings_callback() {
-	echo '<p>Use the hostname you configured on the Pirsch dashboard for your website (e.g. example.com).
-		To gain a client ID and secret, navigate to the Pirsch dashboard, click on settings, and create a new client.
+	echo '<p>To gain a client ID and secret, navigate to the Pirsch dashboard, click on settings, and create a new client.
 		<strong>You can also use a single access token and skip the client ID.</strong> Read our <a href="https://docs.pirsch.io/get-started/backend-integration/" target="_blank">backend integration</a> for details.</p>';
 	echo '<p>The header is optional and should only be set when WordPress is running behind a proxy or load balancer.
 		Pirsch requires the real visitor IP address, so you must provide the right header.<br />
 		Options are: CF-Connecting-IP, True-Client-IP, X-Forwarded-For, Forwarded, X-Real-IP.</p>';
 	echo '<p>The path filter can be used to exclude pages and files. Enter a comma separated list of <a href="https://www.php.net/manual/en/reference.pcre.pattern.syntax.php" target="_blank">regular expressions</a>, to filter unwanted page views.</p>';
 	echo '<p><a href="https://dashboard.pirsch.io/settings" target="_blank">Go to the Pirsch settings page</a></p>';
-}
-
-function pirsch_analytics_hostname_callback() {
-	$value = get_option('pirsch_analytics_hostname', '');
-	echo '<input type="text" name="pirsch_analytics_hostname" value="'.esc_attr($value).'" />';
 }
 
 function pirsch_analytics_client_id_callback() {
@@ -150,13 +134,12 @@ function pirsch_analytics_remove_settings_page() {
 function pirsch_analytics_middleware() {
 	try {
 		if (!is_admin() && !pirsch_analytics_is_wp_site() && !pirsch_analytics_is_excluded()) {
-			$hostname = get_option('pirsch_analytics_hostname');
 			$clientID = get_option('pirsch_analytics_client_id');
 			$clientSecret = get_option('pirsch_analytics_client_secret');
 			$header = get_option('pirsch_analytics_header');
 
-			if (!empty($hostname) && !empty($clientSecret)) {
-				$client = new Pirsch\Client($clientID, $clientSecret, $hostname, Pirsch\Client::DEFAULT_BASE_URL);
+			if (!empty($clientSecret)) {
+				$client = new Pirsch\Client($clientID, $clientSecret, Pirsch\Client::DEFAULT_TIMEOUT);
 				$options = new Pirsch\HitOptions();
 
 				if (!empty($header)) {

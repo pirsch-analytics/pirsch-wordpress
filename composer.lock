@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34f7c05d7a02cc05e6b1fbe5c260f713",
+    "content-hash": "148d06b1cf3f5111976cbbde4a1da156",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -333,16 +333,16 @@
         },
         {
             "name": "pirsch-analytics/sdk",
-            "version": "v1.12.0",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pirsch-analytics/pirsch-php-sdk.git",
-                "reference": "8a1542c3699e7fffaa306b03b426ba473a5a420b"
+                "reference": "12af5786baa6136f1e66efa9a434bc4c94f26eca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pirsch-analytics/pirsch-php-sdk/zipball/8a1542c3699e7fffaa306b03b426ba473a5a420b",
-                "reference": "8a1542c3699e7fffaa306b03b426ba473a5a420b",
+                "url": "https://api.github.com/repos/pirsch-analytics/pirsch-php-sdk/zipball/12af5786baa6136f1e66efa9a434bc4c94f26eca",
+                "reference": "12af5786baa6136f1e66efa9a434bc4c94f26eca",
                 "shasum": ""
             },
             "require": {
@@ -377,9 +377,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pirsch-analytics/pirsch-php-sdk/issues",
-                "source": "https://github.com/pirsch-analytics/pirsch-php-sdk/tree/v1.12.0"
+                "source": "https://github.com/pirsch-analytics/pirsch-php-sdk/tree/v2.0.2"
             },
-            "time": "2024-05-24T11:35:07+00:00"
+            "time": "2025-01-31T17:05:34+00:00"
         },
         {
             "name": "psr/http-client",

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.2
+
+* updated dependencies
+
+## 2.0.1
+
+* fixed unsetting access token stored inside session on error
+
+## 2.0.0
+
+* added funnel endpoints
+* added options to extending sessions
+* updated dependencies
+
 ## 1.12.0
 
 * added regional statistics

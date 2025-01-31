@@ -9,22 +9,31 @@ session_destroy();
 require_once 'src/Client.php';
 require_once 'src/Filter.php';
 
+// Configuration
 $clientID = '';
 $clientSecret = '';
-$client = new Pirsch\Client($clientID, $clientSecret, 5.0, 'https://localhost.com:9999');
+$baseURL = Pirsch\Client::DEFAULT_BASE_URL; // https://localhost.com:9999
+//$baseURL = 'https://localhost.com:9999';
+$sendData = true;
 
-try {
-	$client->hit();
-	print '<p>Hit sent!</p>';
-} catch(Exception $e) {
-	print '<p>An error occurred while sending the hit: </p>'.$e->getMessage();
-}
+// Create client
+$client = new Pirsch\Client($clientID, $clientSecret, Pirsch\Client::DEFAULT_TIMEOUT, $baseURL);
 
-try {
-	$client->event('PHP', 42, ['hello' => 'world']);
-	print '<p>Event sent!</p>';
-} catch(Exception $e) {
-	print '<p>An error occurred while sending the event: </p>'.$e->getMessage();
+// Send page view and event
+if ($sendData) {
+    try {
+        $client->hit();
+        print '<p>Page view sent!</p>';
+    } catch(Exception $e) {
+        print '<p>An error occurred while sending the page view: </p>'.$e->getMessage();
+    }
+
+    try {
+        $client->event('PHP', 42, ['hello' => 'world']);
+        print '<p>Event sent!</p>';
+    } catch(Exception $e) {
+        print '<p>An error occurred while sending the event: </p>'.$e->getMessage();
+    }
 }
 
 try {
@@ -148,6 +157,17 @@ try {
     $keywords = $client->keywords($filter);
     var_dump($keywords);
     echo '<br /><br />';
+
+    $funnel = $client->listFunnel($filter);
+    var_dump($funnel);
+    echo '<br /><br />';
+
+    foreach ($funnel as $f) {
+        $filter->funnel_id = $f->id;
+        $data = $client->funnel($filter);
+        var_dump($data);
+        echo '<br /><br />';
+    }
 } catch(Exception $e) {
     print '<p>An error occurred while reading the statistics: </p>'.$e->getMessage();
 }

@@ -47,4 +47,5 @@ class Filter {
 	public $sort;
 	public $direction;
 	public $search;
+	public $funnel_id;
 }

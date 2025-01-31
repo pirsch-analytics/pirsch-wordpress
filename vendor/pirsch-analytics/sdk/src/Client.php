@@ -5,6 +5,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 class Client {
 	const DEFAULT_BASE_URL = 'https://api.pirsch.io';
+	const DEFAULT_TIMEOUT = 5.0;
 
 	const AUTHENTICATION_ENDPOINT = '/api/v1/token';
 	const HIT_ENDPOINT = '/api/v1/hit';
@@ -44,6 +45,8 @@ class Client {
 	const TAG_KEYS_ENDPOINT = "/api/v1/statistics/tags";
 	const TAG_DETAILS_ENDPOINT = "/api/v1/statistics/tag/details";
 	const KEYWORDS_ENDPOINT = '/api/v1/statistics/keywords';
+	const LIST_FUNNEL_ENDPOINT = "/api/v1/funnel";
+	const FUNNEL_ENDPOINT = "/api/v1/statistics/funnel";
 
 	const REFERRER_QUERY_PARAMS = array(
 		'ref',
@@ -53,11 +56,13 @@ class Client {
 		'utm_source'
 	);
 
+	const SESSION_TOKEN_KEY = 'pirsch_access_token';
+
 	private $clientID;
 	private $clientSecret;
 	private $client;
 
-	function __construct($clientID, $clientSecret, $timeout = 5.0, $baseURL = self::DEFAULT_BASE_URL) {
+	function __construct($clientID, $clientSecret, $timeout = self::DEFAULT_TIMEOUT, $baseURL = self::DEFAULT_BASE_URL) {
 		$this->clientID = $clientID;
 		$this->clientSecret = $clientSecret;
 		$this->client = new \GuzzleHttp\Client([
@@ -86,7 +91,7 @@ class Client {
 			]);
 			return json_decode($response->getBody());
 		} catch(\GuzzleHttp\Exception\RequestException $e) {
-			if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+			if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() == 401 && $retry) {
 				$this->refreshToken();
 				return $this->hit(false);
 			} else {
@@ -139,10 +144,10 @@ class Client {
 			]);
 			return json_decode($response->getBody());
 		} catch(\GuzzleHttp\Exception\RequestException $e) {
-			if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+			if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() == 401 && $retry) {
 				$this->refreshToken();
 				return $this->pageview($data, false);
-			} else if ($e->getResponse()->getStatusCode() != 200) {
+			} else if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() != 200) {
 				throw new \Exception('Error sending page view: '.$e->getResponse()->getBody());
 			}
 		}
@@ -195,10 +200,10 @@ class Client {
 			]);
 			return json_decode($response->getBody());
 		} catch(\GuzzleHttp\Exception\RequestException $e) {
-			if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+			if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() == 401 && $retry) {
 				$this->refreshToken();
 				return $this->event($name, $duration, $meta, $data, false);
-			} else if ($e->getResponse()->getStatusCode() != 200) {
+			} else if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() != 200) {
 				throw new \Exception('Error sending event: '.$e->getResponse()->getBody());
 			}
 		}
@@ -206,27 +211,39 @@ class Client {
 		return null;
 	}
 
-	function session($retry = true) {
+	function session(HitOptions $data, $retry = true) {
 		try {
+			if (is_null($data)) {
+				$data = new HitOptions;
+			}
+
+			$data->ip = $this->isEmpty($data->ip) ? $this->getHeader('REMOTE_ADDR') : $data->ip;
+			$data->user_agent = $this->isEmpty($data->user_agent) ? $this->getHeader('HTTP_USER_AGENT') : $data->user_agent;
+			$data->sec_ch_ua = $this->isEmpty($data->sec_ch_ua) ? $this->getHeader('HTTP_SEC_CH_UA') : $data->sec_ch_ua;
+			$data->sec_ch_ua_mobile = $this->isEmpty($data->sec_ch_ua_mobile) ? $this->getHeader('HTTP_SEC_CH_UA_MOBILE') : $data->sec_ch_ua_mobile;
+			$data->sec_ch_ua_platform = $this->isEmpty($data->sec_ch_ua_platform) ? $this->getHeader('HTTP_SEC_CH_UA_PLATFORM') : $data->sec_ch_ua_platform;
+			$data->sec_ch_ua_platform_version = $this->isEmpty($data->sec_ch_ua_platform_version) ? $this->getHeader('HTTP_SEC_CH_UA_PLATFORM_VERSION') : $data->sec_ch_ua_platform_version;
+			$data->sec_ch_width = $this->isEmpty($data->sec_ch_width) ? $this->getHeader('HTTP_SEC_CH_WIDTH') : $data->sec_ch_width;
+			$data->sec_ch_viewport_width = $this->isEmpty($data->sec_ch_viewport_width) ? $this->getHeader('HTTP_SEC_CH_VIEWPORT_WIDTH') : $data->sec_ch_viewport_width;
 			$response = $this->client->post(self::SESSION_ENDPOINT, [
 				'headers' => $this->getRequestHeader(),
 				'json' => [
-					'ip' => $this->getHeader('REMOTE_ADDR'),
-					'user_agent' => $this->getHeader('HTTP_USER_AGENT'),
-					'sec_ch_ua' => $this->getHeader('HTTP_SEC_CH_UA'),
-					'sec_ch_ua_mobile' => $this->getHeader('HTTP_SEC_CH_UA_MOBILE'),
-					'sec_ch_ua_platform' => $this->getHeader('HTTP_SEC_CH_UA_PLATFORM'),
-					'sec_ch_ua_platform_version' => $this->getHeader('HTTP_SEC_CH_UA_PLATFORM_VERSION'),
-					'sec_ch_width' => $this->getHeader('HTTP_SEC_CH_WIDTH'),
-					'sec_ch_viewport_width' => $this->getHeader('HTTP_SEC_CH_VIEWPORT_WIDTH'),
+					'ip' => $data->ip,
+					'user_agent' => $data->user_agent,
+					'sec_ch_ua' => $data->sec_ch_ua,
+					'sec_ch_ua_mobile' => $data->sec_ch_ua_mobile,
+					'sec_ch_ua_platform' => $data->sec_ch_ua_platform,
+					'sec_ch_ua_platform_version' => $data->sec_ch_ua_platform_version,
+					'sec_ch_width' => $data->sec_ch_width,
+					'sec_ch_viewport_width' => $data->sec_ch_viewport_width,
 				]
 			]);
 			return json_decode($response->getBody());
 		} catch(\GuzzleHttp\Exception\RequestException $e) {
-			if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+			if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() == 401 && $retry) {
 				$this->refreshToken();
 				return $this->session(false);
-			} else if ($e->getResponse()->getStatusCode() != 200) {
+			} else if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() != 200) {
 				throw new \Exception('Error extending session: '.$e->getResponse()->getBody());
 			}
 		}
@@ -251,10 +268,10 @@ class Client {
 
 			return $domains[0];
 		} catch(\GuzzleHttp\Exception\RequestException $e) {
-			if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+			if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() == 401 && $retry) {
 				$this->refreshToken();
 				return $this->domain(false);
-			} else if ($e->getResponse()->getStatusCode() != 200) {
+			} else if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() != 200) {
 				throw new \Exception('Error getting domain: '.$e->getResponse()->getBody());
 			}
 		}
@@ -394,6 +411,14 @@ class Client {
 		return $this->performGet(self::KEYWORDS_ENDPOINT, $filter);
 	}
 
+	function listFunnel(Filter $filter) {
+		return $this->performGet(self::LIST_FUNNEL_ENDPOINT, $filter);
+	}
+
+	function funnel(Filter $filter) {
+		return $this->performGet(self::FUNNEL_ENDPOINT, $filter);
+	}
+
 	private function performGet($url, Filter $filter, $retry = true) {
 		try {
 			if ($this->getAccessToken() === '' && $retry) {
@@ -406,10 +431,10 @@ class Client {
 			]);
 			return json_decode($response->getBody());
 		} catch(\GuzzleHttp\Exception\RequestException $e) {
-			if ($e->getResponse()->getStatusCode() == 401 && $retry) {
+			if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() == 401 && $retry) {
 				$this->refreshToken();
 				return $this->performGet($url, $filter, false);
-			} else if ($e->getResponse()->getStatusCode() != 200) {
+			} else if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() != 200) {
 				throw new \Exception('Error getting result for '.$url.': '.$e->getResponse()->getBody());
 			}
 		}
@@ -417,6 +442,8 @@ class Client {
 
 	private function refreshToken() {
 		try {
+			unset($_SESSION[self::SESSION_TOKEN_KEY]);
+
 			if (empty($this->clientID)) {
 				throw new \Exception('Single access tokens cannot be refreshed');
 			}
@@ -437,10 +464,10 @@ class Client {
 			}
 
 			$resp = json_decode($response->getBody());
-			$_SESSION['pirsch_access_token'] = $resp->access_token;
+			$_SESSION[self::SESSION_TOKEN_KEY] = $resp->access_token;
 		} catch(\GuzzleHttp\Exception\RequestException $e) {
-			if ($e->getResponse()->getStatusCode() != 200) {
-				throw new \Exception('Error refreshing token '.$e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody());
+			if (!is_null($e->getResponse()) && $e->getResponse()->getStatusCode() != 200) {
+				throw new \Exception('Error refreshing token '.!is_null($e->getResponse()) && $e->getResponse()->getStatusCode().': '.$e->getResponse()->getBody());
 			}
 		}
 	}
@@ -455,8 +482,8 @@ class Client {
 	private function getAccessToken() {
 		if (empty($this->clientID)) {
 			return $this->clientSecret;
-		} else if (isset($_SESSION['pirsch_access_token'])) {
-			return $_SESSION['pirsch_access_token'];
+		} else if (isset($_SESSION[self::SESSION_TOKEN_KEY])) {
+			return $_SESSION[self::SESSION_TOKEN_KEY];
 		}
 
 		return '';
