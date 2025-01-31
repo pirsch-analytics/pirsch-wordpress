@@ -37,9 +37,12 @@ class Client {
 	const BROWSER_ENDPOINT = '/api/v1/statistics/browser';
 	const BROWSER_VERSION_ENDPOINT = '/api/v1/statistics/browser/version';
 	const COUNTRY_ENDPOINT = '/api/v1/statistics/country';
+	const REGION_ENDPOINT = '/api/v1/statistics/region';
 	const CITY_ENDPOINT = '/api/v1/statistics/city';
 	const PLATFORM_ENDPOINT = '/api/v1/statistics/platform';
 	const SCREEN_ENDPOINT = '/api/v1/statistics/screen';
+	const TAG_KEYS_ENDPOINT = "/api/v1/statistics/tags";
+	const TAG_DETAILS_ENDPOINT = "/api/v1/statistics/tag/details";
 	const KEYWORDS_ENDPOINT = '/api/v1/statistics/keywords';
 
 	const REFERRER_QUERY_PARAMS = array(
@@ -65,10 +68,6 @@ class Client {
 
 	function hit($retry = true) {
 		try {
-			if ($this->getHeader('DNT') === '1') {
-				return;
-			}
-
 			$response = $this->client->post(self::HIT_ENDPOINT, [
 				'headers' => $this->getRequestHeader(),
 				'json' => [
@@ -100,10 +99,6 @@ class Client {
 
 	function pageview(HitOptions $data, $retry = true) {
 		try {
-			if ($this->getHeader('DNT') === '1') {
-				return;
-			}
-
 			if (is_null($data)) {
 				$data = new HitOptions;
 			}
@@ -138,7 +133,8 @@ class Client {
 					'title' => $data->title,
 					'referrer' => $data->referrer,
 					'screen_width' => intval($data->screen_width),
-					'screen_height' => intval($data->screen_height)
+					'screen_height' => intval($data->screen_height),
+					'tags' => $data->tags
 				]
 			]);
 			return json_decode($response->getBody());
@@ -156,10 +152,6 @@ class Client {
 
 	function event($name, $duration = 0, $meta = NULL, HitOptions $data = NULL, $retry = true) {
 		try {
-			if ($this->getHeader('DNT') === '1') {
-				return;
-			}
-
 			if (is_null($data)) {
 				$data = new HitOptions;
 			}
@@ -197,7 +189,8 @@ class Client {
 					'title' => $data->title,
 					'referrer' => $data->referrer,
 					'screen_width' => intval($data->screen_width),
-					'screen_height' => intval($data->screen_height)
+					'screen_height' => intval($data->screen_height),
+					'tags' => $data->tags
 				]
 			]);
 			return json_decode($response->getBody());
@@ -215,10 +208,6 @@ class Client {
 
 	function session($retry = true) {
 		try {
-			if ($this->getHeader('DNT') === '1') {
-				return;
-			}
-
 			$response = $this->client->post(self::SESSION_ENDPOINT, [
 				'headers' => $this->getRequestHeader(),
 				'json' => [
@@ -377,6 +366,10 @@ class Client {
 		return $this->performGet(self::COUNTRY_ENDPOINT, $filter);
 	}
 
+	function region(Filter $filter) {
+		return $this->performGet(self::REGION_ENDPOINT, $filter);
+	}
+
 	function city(Filter $filter) {
 		return $this->performGet(self::CITY_ENDPOINT, $filter);
 	}
@@ -387,6 +380,14 @@ class Client {
 
 	function screen(Filter $filter) {
 		return $this->performGet(self::SCREEN_ENDPOINT, $filter);
+	}
+
+	function tagKeys(Filter $filter) {
+		return $this->performGet(self::TAG_KEYS_ENDPOINT, $filter);
+	}
+
+	function tags(Filter $filter) {
+		return $this->performGet(self::TAG_DETAILS_ENDPOINT, $filter);
 	}
 
 	function keywords(Filter $filter) {
