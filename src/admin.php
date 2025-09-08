@@ -106,7 +106,7 @@ function pirsch_embedded_dashboard() {
 
 	if (!empty($iframeURL)) {
 		?>
-		<iframe src="<?php echo $iframeURL; ?>" style="width: 100%;height: 80vh;border-width: 0;"></iframe>
+		<iframe src="<?php echo $iframeURL; ?>" style="width: 100%;height: 80vh;border-width: 0;margin-top: 20px;"></iframe>
 		<?php
 	} else {
 		?>
@@ -120,15 +120,33 @@ function pirsch_analytics_settings_page_html() {
         return;
     }
 
+	$tabs = array(
+		'dashboard' => 'Dashboard',
+		'settings' => 'Settings'
+	);
+	$currentTab = isset($_GET['tab']) && isset($tabs[$_GET['tab']]) ? $_GET['tab'] : array_key_first($tabs);
+
     ?>
     <div class="wrap">
         <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-		<?php pirsch_embedded_dashboard(); ?>
-        <form action="options.php" method="post">
+		<form action="options.php" method="post">
+			<nav class="nav-tab-wrapper">
+				<?php
+				foreach ($tabs as $tab => $name) {
+					$current = $tab === $currentTab ? ' nav-tab-active' : '';
+					$url = add_query_arg(array('page' => 'pirsch_analytics_page', 'tab' => $tab), '');
+					echo "<a class=\"nav-tab{$current}\" href=\"{$url}\">{$name}</a>";
+				}
+				?>
+			</nav>
             <?php
-            settings_fields('pirsch_analytics_page');
-            do_settings_sections('pirsch_analytics_page');
-            submit_button(__( 'Save', 'textdomain'));
+			if ($currentTab == 'settings') {
+				settings_fields('pirsch_analytics_page');
+				do_settings_sections('pirsch_analytics_page');
+				submit_button(__( 'Save', 'textdomain'));
+			} else {
+				pirsch_embedded_dashboard();
+			}
             ?>
         </form>
     </div>
