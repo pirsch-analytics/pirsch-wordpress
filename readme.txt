@@ -1,7 +1,7 @@
 === Pirsch Analytics ===
 Contributors: m5blum
 Tags: pirsch, analytics, server-side, web
-Requires at least: 5.1
+Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 8.1
 Stable tag: 2.0.0

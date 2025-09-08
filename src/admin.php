@@ -5,13 +5,16 @@ function pirsch_analytics_uninstall() {
 	delete_option('pirsch_analytics_client_access_key');
 	delete_option('pirsch_analytics_header');
 	delete_option('pirsch_analytics_path_filter');
+	delete_option('pirsch_analytics_iframe_url');
 }
 
 function pirsch_analytics_settings_page_init() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_access_key');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_header');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_path_filter');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_iframe_url');
 
+	// tracking
 	add_settings_section(
 		'pirsch_analytics_tracking',
 		__('Tracking', 'pirsch_analytics'),
@@ -48,6 +51,24 @@ function pirsch_analytics_settings_page_init() {
 			'label_for' => 'pirsch_analytics_path_filter'
 		]
 	);
+
+	// embedded dashboard
+	add_settings_section(
+		'pirsch_analytics_embedded',
+		__('Embedded Dashboard', 'pirsch_analytics'),
+		NULL,
+		'pirsch_analytics_page'
+    );
+	add_settings_field(
+		'pirsch_analytics_iframe_url',
+		__('Embed URL', 'pirsch_analytics'),
+		'pirsch_analytics_iframe_url_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_embedded',
+		[
+			'label_for' => 'pirsch_analytics_iframe_url'
+		]
+	);
 }
 
 function pirsch_analytics_client_access_key_callback() {
@@ -75,6 +96,25 @@ function pirsch_analytics_path_filter_callback() {
 	echo '<input type="text" name="pirsch_analytics_path_filter" value="'.esc_attr($value).'" id="pirsch_analytics_path_filter" />';
 }
 
+function pirsch_analytics_iframe_url_callback() {
+	$value = get_option('pirsch_analytics_iframe_url', '');
+	echo '<input name="pirsch_analytics_iframe_url" value="'.esc_attr($value).'" id="pirsch_analytics_iframe_url" />';
+}
+
+function pirsch_embedded_dashboard() {
+	$iframeURL = get_option('pirsch_analytics_iframe_url', '');
+
+	if (!empty($iframeURL)) {
+		?>
+		<iframe src="<?php echo $iframeURL; ?>" style="width: 100%;height: 80vh;border-width: 0;"></iframe>
+		<?php
+	} else {
+		?>
+		<p>Please configure the embedding URL to see your Pirsch Analytics dashboard.</p>
+		<?php
+	}
+}
+
 function pirsch_analytics_settings_page_html() {
     if (!current_user_can('manage_options')) {
         return;
@@ -83,6 +123,7 @@ function pirsch_analytics_settings_page_html() {
     ?>
     <div class="wrap">
         <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+		<?php pirsch_embedded_dashboard(); ?>
         <form action="options.php" method="post">
             <?php
             settings_fields('pirsch_analytics_page');
