@@ -50,7 +50,7 @@ function pirsch_analytics_settings_page_init() {
 	);
 	add_settings_field(
 		'pirsch_analytics_path_filter',
-		__('Path Filter (one per line)', 'pirsch_analytics'),
+		__('Path Filter', 'pirsch_analytics'),
 		'pirsch_analytics_path_filter_callback',
 		'pirsch_analytics_page',
 		'pirsch_analytics_tracking',
@@ -100,7 +100,14 @@ function pirsch_analytics_header_callback() {
 
 function pirsch_analytics_path_filter_callback() {
 	$value = get_option('pirsch_analytics_path_filter', '');
-	echo '<textarea name="pirsch_analytics_path_filter" id="pirsch_analytics_path_filter" autocomplete="off" style="min-width: 300px;min-height: 200px;">'.$value.'</textarea>';
+	echo '<textarea name="pirsch_analytics_path_filter" id="pirsch_analytics_path_filter" autocomplete="off" style="min-width: 300px;min-height: 200px;">'.$value.'</textarea>
+	<p style="font-style: italic;">
+		One filter per line. Prefix regular expressions with "regex:" and escape slashes.<br>
+		Example:<br><br>
+		/filter/path<br>
+		regex:^\/regex\/filter\/.*$
+	</p>
+	';
 }
 
 function pirsch_analytics_iframe_url_callback() {

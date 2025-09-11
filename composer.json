@@ -1,5 +1,8 @@
 {
     "require": {
         "pirsch-analytics/sdk": "^2.0.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12"
     }
 }

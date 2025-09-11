@@ -1,16 +1,19 @@
 <?php
+const PIRSCH_FILTER_REGEX_PREFIX = 'regex:';
+
 // TODO
-// - pirsch_analytics_client_access_key
+// - disabled
+// - logged in users
 // - track custom events for 404 pages
+// - add pa.js script
 function pirsch_analytics_middleware() {
 	try {
 		if (!is_admin() && !pirsch_analytics_is_wp_site() && !pirsch_analytics_is_excluded()) {
-			$clientID = get_option('pirsch_analytics_client_id');
-			$clientSecret = get_option('pirsch_analytics_client_secret');
+			$accessKey = get_option('pirsch_analytics_client_access_key');
 			$header = get_option('pirsch_analytics_header');
 
-			if (!empty($clientSecret)) {
-				$client = new Pirsch\Client($clientID, $clientSecret, Pirsch\Client::DEFAULT_TIMEOUT);
+			if (!empty($accessKey)) {
+				$client = new Pirsch\Client('', $accessKey, Pirsch\Client::DEFAULT_TIMEOUT);
 				$options = new Pirsch\HitOptions();
 
 				if (!empty($header)) {
@@ -42,7 +45,7 @@ function pirsch_analytics_middleware() {
 }
 
 function pirsch_analytics_is_wp_site() {
-	$pattern = "/\/*wp-.*/i";
+	$pattern = "/^\/*wp-.*$/i";
 	$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 	return preg_match($pattern, $path) === 1;
 }
@@ -51,11 +54,21 @@ function pirsch_analytics_is_excluded() {
 	$filter = trim(get_option('pirsch_analytics_path_filter'));
 
 	if (!empty($filter)) {
-		$patterns = explode(',', $filter);
+		$filter = explode('\n', str_replace('\n\r', '\n', $filter));
 
-		foreach ($patterns as $pattern) {
-			if (preg_match('/'.$pattern.'/U', $_SERVER['REQUEST_URI'])) {
-				return true;
+		foreach ($filter as $f) {
+			if (empty($f)) {
+				continue;
+			}
+
+			if (str_starts_with(strtolower($f), PIRSCH_FILTER_REGEX_PREFIX)) {
+				if (preg_match('/'.substr($f, strlen(PIRSCH_FILTER_REGEX_PREFIX)).'/U', $_SERVER['REQUEST_URI'])) {
+					return true;
+				}
+			} else {
+				if ($_SERVER['REQUEST_URI'] == $f) {
+					return true;
+				}
 			}
 		}
 	}
@@ -65,10 +78,9 @@ function pirsch_analytics_is_excluded() {
 
 function pirsch_analytics_parse_x_forwarded_for($header) {
 	$parts = explode(',', $header);
-	$n = count($parts);
-
-	if ($n > 0) {
-		return $parts[$n-1];
+	
+	if (count($parts)) {
+		return trim($parts[0]);
 	}
 
 	return '';
@@ -82,10 +94,10 @@ function pirsch_analytics_parse_forwarded_header($header) {
 		$parts = explode(';', $parts[$n-1]);
 
 		foreach ($parts as $part) {
-			$kv = explode('=', $part, 1);
+			$kv = explode('=', $part);
 
-			if (count($kv) == 2 && $kv[0] == 'for') {
-				return $kv[1];
+			if (count($kv) == 2 && strtolower(trim($kv[0])) == 'by') {
+				return trim($kv[1], '\n\r\t\v"');
 			}
 		}
 

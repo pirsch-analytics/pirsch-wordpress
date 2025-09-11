@@ -34,10 +34,12 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 = 2.0.0 =
 
 - added embedded dashboard
+- improved page path filter
 - improved and simplified UI
 - removed client ID + secret option in favor of access keys
 - fixed running plugin with WPRocket (and potentially other caching plugins) installed
 - fixed removing settings on uninstall instead of deactivation
+- fixed X-Forwarded-For and Forwarded proxy headers
 - updated dependencies
 
 = 1.7.0 =

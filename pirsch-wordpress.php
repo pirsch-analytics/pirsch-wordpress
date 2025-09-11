@@ -24,4 +24,4 @@ register_uninstall_hook(__FILE__, 'pirsch_analytics_uninstall');
 add_action('admin_init', 'pirsch_analytics_settings_page_init');
 add_action('admin_menu', 'pirsch_analytics_add_settings_page');
 add_action('admin_menu', 'pirsch_analytics_remove_settings_page', 99);
-add_action('init', 'pirsch_analytics_middleware', 9); // run before WPRocket
+add_action('init', 'pirsch_analytics_middleware', 9); // execute before WPRocket or other cache plugins
