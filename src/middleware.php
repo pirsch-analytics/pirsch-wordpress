@@ -1,9 +1,6 @@
 <?php
 const PIRSCH_FILTER_REGEX_PREFIX = 'regex:';
 
-// TODO
-// - track custom events for 404 pages
-// - add pa.js script
 function pirsch_analytics_middleware() {
 	try {
 		if (empty(get_option('pirsch_analytics_disabled')) &&
@@ -56,24 +53,21 @@ function pirsch_analytics_is_wp_site() {
 }
 
 function pirsch_analytics_is_excluded() {
-	$filter = trim(get_option('pirsch_analytics_path_filter'));
+	$filter = 'regex:^\/favicon\.ico.*$\n'.trim(get_option('pirsch_analytics_path_filter'));
+	$filter = explode('\n', str_replace('\n\r', '\n', $filter));
 
-	if (!empty($filter)) {
-		$filter = explode('\n', str_replace('\n\r', '\n', $filter));
+	foreach ($filter as $f) {
+		if (empty($f)) {
+			continue;
+		}
 
-		foreach ($filter as $f) {
-			if (empty($f)) {
-				continue;
+		if (str_starts_with(strtolower($f), PIRSCH_FILTER_REGEX_PREFIX)) {
+			if (preg_match('/'.substr($f, strlen(PIRSCH_FILTER_REGEX_PREFIX)).'/U', $_SERVER['REQUEST_URI'])) {
+				return true;
 			}
-
-			if (str_starts_with(strtolower($f), PIRSCH_FILTER_REGEX_PREFIX)) {
-				if (preg_match('/'.substr($f, strlen(PIRSCH_FILTER_REGEX_PREFIX)).'/U', $_SERVER['REQUEST_URI'])) {
-					return true;
-				}
-			} else {
-				if ($_SERVER['REQUEST_URI'] == $f) {
-					return true;
-				}
+		} else {
+			if ($_SERVER['REQUEST_URI'] == $f) {
+				return true;
 			}
 		}
 	}

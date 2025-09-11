@@ -35,6 +35,8 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 
 - added embedded dashboard
 - added toggles to disable tracking entirely and for logged in users
+- added filtering favicon.ico by default
+- added the option to use the snippet
 - improved page path filter
 - improved and simplified UI
 - removed client ID + secret option in favor of access keys

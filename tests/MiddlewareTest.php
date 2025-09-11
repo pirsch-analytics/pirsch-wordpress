@@ -32,6 +32,8 @@ final class MiddlewareTest extends TestCase {
             array('url' => '/foo', 'result' => true),
             array('url' => '/bar', 'result' => true),
             array('url' => '/filter/page/here', 'result' => true),
+            array('url' => '/favicon.ico', 'result' => true),
+            array('url' => '/favicon.ico/', 'result' => true),
         );
 
         foreach ($tests as $t) {

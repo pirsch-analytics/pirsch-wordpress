@@ -18,6 +18,7 @@ if (!defined('WPINC')) {
 require_once __DIR__.'/vendor/autoload.php';
 require_once __DIR__.'/src/admin.php';
 require_once __DIR__.'/src/middleware.php';
+require_once __DIR__.'/src/snippet.php';
 
 register_activation_hook(__FILE__, 'pirsch_analytics_activate');
 register_uninstall_hook(__FILE__, 'pirsch_analytics_uninstall');
@@ -25,3 +26,4 @@ add_action('admin_init', 'pirsch_analytics_settings_page_init');
 add_action('admin_menu', 'pirsch_analytics_add_settings_page');
 add_action('admin_menu', 'pirsch_analytics_remove_settings_page', 99);
 add_action('init', 'pirsch_analytics_middleware', 9); // execute before WPRocket and other cache plugins
+add_action('wp_head', 'pirsch_analytics_snippet');

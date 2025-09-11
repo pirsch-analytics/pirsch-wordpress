@@ -1,6 +1,7 @@
 <?php
 function pirsch_analytics_activate() {
 	set_option('pirsch_analytics_ignore_logged_in', 'on');
+	set_option('pirsch_analytics_script_disable_page_views', 'on');
 }
 
 function pirsch_analytics_uninstall() {
@@ -10,11 +11,11 @@ function pirsch_analytics_uninstall() {
 	delete_option('pirsch_analytics_iframe_url');
 	delete_option('pirsch_analytics_disabled');
 	delete_option('pirsch_analytics_ignore_logged_in');
+	delete_option('pirsch_analytics_add_script');
+	delete_option('pirsch_analytics_script_disable_page_views');
+	delete_option('pirsch_analytics_identification_code');
 }
 
-// TODO
-// - toggles for custom events
-// - add pa.js script with or without page view tracking
 function pirsch_analytics_settings_page_init() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_access_key');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_header');
@@ -22,8 +23,29 @@ function pirsch_analytics_settings_page_init() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_iframe_url');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_disabled');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_ignore_logged_in');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_add_script');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_script_disable_page_views');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_identification_code');
 
-	// tracking
+	// embedded dashboard
+	add_settings_section(
+		'pirsch_analytics_embedded',
+		__('Embedded Dashboard', 'pirsch_analytics'),
+		NULL,
+		'pirsch_analytics_page'
+    );
+	add_settings_field(
+		'pirsch_analytics_iframe_url',
+		__('Embed URL', 'pirsch_analytics'),
+		'pirsch_analytics_iframe_url_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_embedded',
+		[
+			'label_for' => 'pirsch_analytics_iframe_url'
+		]
+	);
+
+	// server-side tracking
 	add_settings_section(
 		'pirsch_analytics_tracking',
 		__('Tracking', 'pirsch_analytics'),
@@ -72,7 +94,7 @@ function pirsch_analytics_settings_page_init() {
 	);
 	add_settings_field(
 		'pirsch_analytics_ignore_logged_in',
-		__('Disable Tracking For Users', 'pirsch_analytics'),
+		__('Disable Tracking For WP Users', 'pirsch_analytics'),
 		'pirsch_analytics_ignore_logged_in_callback',
 		'pirsch_analytics_page',
 		'pirsch_analytics_tracking',
@@ -81,21 +103,41 @@ function pirsch_analytics_settings_page_init() {
 		]
 	);
 
-	// embedded dashboard
-	add_settings_section(
-		'pirsch_analytics_embedded',
-		__('Embedded Dashboard', 'pirsch_analytics'),
+	// client-side tracking
+		add_settings_section(
+		'pirsch_analytics_snippet',
+		__('JavaScript Snippet', 'pirsch_analytics'),
 		NULL,
 		'pirsch_analytics_page'
     );
 	add_settings_field(
-		'pirsch_analytics_iframe_url',
-		__('Embed URL', 'pirsch_analytics'),
-		'pirsch_analytics_iframe_url_callback',
+		'pirsch_analytics_identification_code',
+		__('Identification Code (required)', 'pirsch_analytics'),
+		'pirsch_analytics_identification_code_callback',
 		'pirsch_analytics_page',
-		'pirsch_analytics_embedded',
+		'pirsch_analytics_snippet',
 		[
-			'label_for' => 'pirsch_analytics_iframe_url'
+			'label_for' => 'pirsch_analytics_identification_code'
+		]
+	);
+	add_settings_field(
+		'pirsch_analytics_add_script',
+		__('Add JS Snippet', 'pirsch_analytics'),
+		'pirsch_analytics_add_script_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_snippet',
+		[
+			'label_for' => 'pirsch_analytics_add_script'
+		]
+	);
+	add_settings_field(
+		'pirsch_analytics_script_disable_page_views',
+		__('Disable Page Views', 'pirsch_analytics'),
+		'pirsch_analytics_script_disable_page_views_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_snippet',
+		[
+			'label_for' => 'pirsch_analytics_script_disable_page_views'
 		]
 	);
 }
@@ -145,6 +187,21 @@ function pirsch_analytics_disabled_callback() {
 function pirsch_analytics_ignore_logged_in_callback() {
 	$value = get_option('pirsch_analytics_ignore_logged_in');
 	echo '<input type="checkbox" name="pirsch_analytics_ignore_logged_in" id="pirsch_analytics_ignore_logged_in" '.($value == 'on' ? 'checked' : '').' />';
+}
+
+function pirsch_analytics_identification_code_callback() {
+	$value = get_option('pirsch_analytics_identification_code');
+	echo '<input name="pirsch_analytics_identification_code" value="'.esc_attr($value).'" id="pirsch_analytics_identification_code" />';
+}
+
+function pirsch_analytics_add_script_callback() {
+	$value = get_option('pirsch_analytics_add_script');
+	echo '<input type="checkbox" name="pirsch_analytics_add_script" id="pirsch_analytics_add_script" '.($value == 'on' ? 'checked' : '').' />';
+}
+
+function pirsch_analytics_script_disable_page_views_callback() {
+	$value = get_option('pirsch_analytics_script_disable_page_views');
+	echo '<input type="checkbox" name="pirsch_analytics_script_disable_page_views" id="pirsch_analytics_script_disable_page_views" '.($value == 'on' ? 'checked' : '').' />';
 }
 
 function pirsch_embedded_dashboard() {
