@@ -2,13 +2,15 @@
 const PIRSCH_FILTER_REGEX_PREFIX = 'regex:';
 
 // TODO
-// - disabled
 // - logged in users
 // - track custom events for 404 pages
 // - add pa.js script
 function pirsch_analytics_middleware() {
 	try {
-		if (!is_admin() && !pirsch_analytics_is_wp_site() && !pirsch_analytics_is_excluded()) {
+		if (empty(get_option('pirsch_analytics_disabled')) &&
+			!is_admin() &&
+			!pirsch_analytics_is_wp_site() &&
+			!pirsch_analytics_is_excluded()) {
 			$accessKey = get_option('pirsch_analytics_client_access_key');
 			$header = get_option('pirsch_analytics_header');
 

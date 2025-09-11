@@ -8,10 +8,10 @@ function pirsch_analytics_uninstall() {
 	delete_option('pirsch_analytics_header');
 	delete_option('pirsch_analytics_path_filter');
 	delete_option('pirsch_analytics_iframe_url');
+	delete_option('pirsch_analytics_disabled');
 }
 
 // TODO
-// - disable toggle
 // - toggles for custom events
 // - ignore logged in users
 // - add pa.js script with or without page view tracking
@@ -20,6 +20,7 @@ function pirsch_analytics_settings_page_init() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_header');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_path_filter');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_iframe_url');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_disabled');
 
 	// tracking
 	add_settings_section(
@@ -56,6 +57,16 @@ function pirsch_analytics_settings_page_init() {
 		'pirsch_analytics_tracking',
 		[
 			'label_for' => 'pirsch_analytics_path_filter'
+		]
+	);
+	add_settings_field(
+		'pirsch_analytics_disabled',
+		__('Disable Tracking', 'pirsch_analytics'),
+		'pirsch_analytics_disabled_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_tracking',
+		[
+			'label_for' => 'pirsch_analytics_disabled'
 		]
 	);
 
@@ -113,6 +124,11 @@ function pirsch_analytics_path_filter_callback() {
 function pirsch_analytics_iframe_url_callback() {
 	$value = get_option('pirsch_analytics_iframe_url', '');
 	echo '<input name="pirsch_analytics_iframe_url" value="'.esc_attr($value).'" id="pirsch_analytics_iframe_url" />';
+}
+
+function pirsch_analytics_disabled_callback() {
+	$value = get_option('pirsch_analytics_disabled');
+	echo '<input type="checkbox" name="pirsch_analytics_disabled" id="pirsch_analytics_disabled" '.($value == 'on' ? 'checked' : '').' />';
 }
 
 function pirsch_embedded_dashboard() {
