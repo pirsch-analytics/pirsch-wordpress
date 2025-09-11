@@ -1,5 +1,7 @@
 <?php
-// TODO pirsch_analytics_client_access_key
+// TODO
+// - pirsch_analytics_client_access_key
+// - track custom events for 404 pages
 function pirsch_analytics_middleware() {
 	try {
 		if (!is_admin() && !pirsch_analytics_is_wp_site() && !pirsch_analytics_is_excluded()) {
