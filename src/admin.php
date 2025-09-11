@@ -1,6 +1,6 @@
 <?php
 function pirsch_analytics_activate() {
-	// TODO default option values
+	set_option('pirsch_analytics_ignore_logged_in', 'on');
 }
 
 function pirsch_analytics_uninstall() {
@@ -9,11 +9,11 @@ function pirsch_analytics_uninstall() {
 	delete_option('pirsch_analytics_path_filter');
 	delete_option('pirsch_analytics_iframe_url');
 	delete_option('pirsch_analytics_disabled');
+	delete_option('pirsch_analytics_ignore_logged_in');
 }
 
 // TODO
 // - toggles for custom events
-// - ignore logged in users
 // - add pa.js script with or without page view tracking
 function pirsch_analytics_settings_page_init() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_client_access_key');
@@ -21,6 +21,7 @@ function pirsch_analytics_settings_page_init() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_path_filter');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_iframe_url');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_disabled');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_ignore_logged_in');
 
 	// tracking
 	add_settings_section(
@@ -67,6 +68,16 @@ function pirsch_analytics_settings_page_init() {
 		'pirsch_analytics_tracking',
 		[
 			'label_for' => 'pirsch_analytics_disabled'
+		]
+	);
+	add_settings_field(
+		'pirsch_analytics_ignore_logged_in',
+		__('Disable Tracking For Users', 'pirsch_analytics'),
+		'pirsch_analytics_ignore_logged_in_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_tracking',
+		[
+			'label_for' => 'pirsch_analytics_ignore_logged_in'
 		]
 	);
 
@@ -129,6 +140,11 @@ function pirsch_analytics_iframe_url_callback() {
 function pirsch_analytics_disabled_callback() {
 	$value = get_option('pirsch_analytics_disabled');
 	echo '<input type="checkbox" name="pirsch_analytics_disabled" id="pirsch_analytics_disabled" '.($value == 'on' ? 'checked' : '').' />';
+}
+
+function pirsch_analytics_ignore_logged_in_callback() {
+	$value = get_option('pirsch_analytics_ignore_logged_in');
+	echo '<input type="checkbox" name="pirsch_analytics_ignore_logged_in" id="pirsch_analytics_ignore_logged_in" '.($value == 'on' ? 'checked' : '').' />';
 }
 
 function pirsch_embedded_dashboard() {

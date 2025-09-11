@@ -2,13 +2,12 @@
 const PIRSCH_FILTER_REGEX_PREFIX = 'regex:';
 
 // TODO
-// - logged in users
 // - track custom events for 404 pages
 // - add pa.js script
 function pirsch_analytics_middleware() {
 	try {
 		if (empty(get_option('pirsch_analytics_disabled')) &&
-			!is_admin() &&
+			!pirsch_analytics_ignore_logged_in_user() &&
 			!pirsch_analytics_is_wp_site() &&
 			!pirsch_analytics_is_excluded()) {
 			$accessKey = get_option('pirsch_analytics_client_access_key');
@@ -44,6 +43,10 @@ function pirsch_analytics_middleware() {
 	} catch(Exception $e) {
 		error_log($e->getMessage());
 	}
+}
+
+function pirsch_analytics_ignore_logged_in_user() {
+	return !empty(get_option('pirsch_analytics_ignore_logged_in')) && is_user_logged_in();
 }
 
 function pirsch_analytics_is_wp_site() {

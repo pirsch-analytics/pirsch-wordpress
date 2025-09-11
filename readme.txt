@@ -34,6 +34,7 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 = 2.0.0 =
 
 - added embedded dashboard
+- added toggles to disable tracking entirely and for logged in users
 - improved page path filter
 - improved and simplified UI
 - removed client ID + secret option in favor of access keys
