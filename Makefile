@@ -13,4 +13,5 @@ release:
 	cp index.php $(VERSION)
 	cp pirsch-wordpress.php $(VERSION)
 	cp readme.txt $(VERSION)
-	cp -r vendor $(VERSION)
+	cp -r src $(VERSION)
+	cd $(VERSION) && composer install --no-dev
