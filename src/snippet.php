@@ -2,7 +2,9 @@
 function pirsch_analytics_snippet() {
     $ic = get_option('pirsch_analytics_identification_code');
 
-    if (!empty($ic) && !empty(get_option('pirsch_analytics_add_script'))) {
+    if (empty(get_option('pirsch_analytics_disabled')) &&
+        !empty($ic) &&
+        !empty(get_option('pirsch_analytics_add_script'))) {
         ?>
         <script defer src="https://api.pirsch.io/pa.js"
             id="pianjs"

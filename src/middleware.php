@@ -38,7 +38,7 @@ function pirsch_analytics_middleware() {
 			}
 		}
 	} catch(Exception $e) {
-		error_log($e->getMessage());
+		error_log('Pirsch plugin error: '.$e->getMessage());
 	}
 }
 
@@ -53,23 +53,30 @@ function pirsch_analytics_is_wp_site() {
 }
 
 function pirsch_analytics_is_excluded() {
-	$filter = 'regex:^\/favicon\.ico.*$\n'.trim(get_option('pirsch_analytics_path_filter'));
-	$filter = explode('\n', str_replace('\n\r', '\n', $filter));
+	try {
+		$filter = "regex:^\/favicon\.ico.*$\n".get_option('pirsch_analytics_path_filter');
+		$filter = explode("\n", str_replace("\n\r", "\n", $filter));
 
-	foreach ($filter as $f) {
-		if (empty($f)) {
-			continue;
-		}
+		foreach ($filter as $f) {
+			$f = trim($f);
 
-		if (str_starts_with(strtolower($f), PIRSCH_FILTER_REGEX_PREFIX)) {
-			if (preg_match('/'.substr($f, strlen(PIRSCH_FILTER_REGEX_PREFIX)).'/U', $_SERVER['REQUEST_URI'])) {
-				return true;
+			if (empty($f)) {
+				continue;
 			}
-		} else {
-			if ($_SERVER['REQUEST_URI'] == $f) {
-				return true;
+
+			if (str_starts_with(strtolower($f), PIRSCH_FILTER_REGEX_PREFIX)) {
+				if (preg_match('/'.substr($f, strlen(PIRSCH_FILTER_REGEX_PREFIX)).'/U', $_SERVER['REQUEST_URI'])) {
+					return true;
+				}
+			} else {
+				if ($_SERVER['REQUEST_URI'] == $f || $_SERVER['REQUEST_URI'] == $f.'/') {
+					return true;
+				}
 			}
 		}
+	} catch(Exception $e) {
+		error_log('Pirsch plugin error: '.$e->getMessage());
+		return false;
 	}
 
 	return false;
