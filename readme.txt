@@ -26,8 +26,8 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 
 == Screenshots ==
  
-1. The Pirsch Analytics dashboard.
-2. Manage as many websites as you want and get detailed insights into your statistics.
+1. Embed the Pirsch Analytics dashboard right into WordPress.
+2. A simple and easy to use configuration page for your privacy-friendly web analytics.
 
 == Changelog ==
 
@@ -36,7 +36,7 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 - added embedded dashboard
 - added toggles to disable tracking entirely and for logged in users
 - added filtering favicon.ico by default
-- added the option to use the snippet
+- added the option to use the JavaScript snippet
 - improved page path filter
 - improved and simplified UI
 - removed client ID + secret option in favor of access keys
