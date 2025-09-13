@@ -1,10 +1,10 @@
 === Pirsch Analytics ===
 Contributors: m5blum
-Tags: pirsch, analytics, sdk, client, api
-Requires at least: 5.1
-Tested up to: 6.7
+Tags: pirsch, analytics, server-side, web
+Requires at least: 5.9
+Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 1.7.0
+Stable tag: 2.0.0
 License: MIT
 License URI: https://github.com/pirsch-analytics/pirsch-wordpress/blob/master/LICENSE
 
@@ -16,7 +16,7 @@ Pirsch is a simple, privacy-friendly, open-source web analytics tool. It's light
 
 == Installation ==
 
-To use this plugin, you will have to create an account at https://pirsch.io/ and set up a website. Create a client ID and secret from the dashboards settings page and set them in WordPress on the plugin page (Tools > Pirsch Analytics). It won't analyze your website traffic until you have provided the client details.
+To use this plugin, you will have to create an account at https://pirsch.io/ and set up a website. Create a client access key from the dashboards settings page and set them in WordPress on the plugin page (Tools > Pirsch Analytics). It won't analyze your website traffic until you have provided the client details.
 
 For more information, please read our [documentation](https://docs.pirsch.io/).
 
@@ -26,10 +26,24 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 
 == Screenshots ==
  
-1. The Pirsch Analytics dashboard.
-2. Manage as many websites as you want and get detailed insights into your statistics.
+1. Embed the Pirsch Analytics dashboard right into WordPress.
+2. A simple and easy to use configuration page for your privacy-friendly web analytics.
 
 == Changelog ==
+
+= 2.0.0 =
+
+- added embedded dashboard
+- added toggles to disable tracking entirely and for logged in users
+- added filtering favicon.ico by default
+- added the option to use the JavaScript snippet
+- improved page path filter
+- improved and simplified UI
+- removed client ID + secret option in favor of access keys
+- fixed running plugin with WPRocket (and potentially other caching plugins) installed
+- fixed removing settings on uninstall instead of deactivation
+- fixed X-Forwarded-For and Forwarded proxy headers
+- updated dependencies
 
 = 1.7.0 =
 
