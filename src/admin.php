@@ -1,7 +1,9 @@
 <?php
 function pirsch_analytics_activate() {
-	set_option('pirsch_analytics_ignore_logged_in', 'on');
-	set_option('pirsch_analytics_script_disable_page_views', 'on');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_ignore_logged_in');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_script_disable_page_views');
+	update_option('pirsch_analytics_ignore_logged_in', 'on');
+	update_option('pirsch_analytics_script_disable_page_views', 'on');
 }
 
 function pirsch_analytics_uninstall() {
