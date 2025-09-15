@@ -1,8 +1,14 @@
 <?php
 const PIRSCH_FILTER_REGEX_PREFIX = 'regex:';
+const PIRSCH_SITE_CHECK_CACHE_SECONDS = 300;
+const PIRSCH_SITE_CHECK_USER_AGENT = 'Pirsch Analytics WP Plugin';
 
 function pirsch_analytics_middleware() {
 	try {
+		if ($_SERVER['HTTP_USER_AGENT'] === PIRSCH_SITE_CHECK_USER_AGENT) {
+			return;
+		}
+
 		if (empty(get_option('pirsch_analytics_disabled')) &&
 			!pirsch_analytics_ignore_logged_in_user() &&
 			!pirsch_analytics_is_wp_site() &&
@@ -34,7 +40,13 @@ function pirsch_analytics_middleware() {
 					}
 				}
 
-				$client->pageview($options);
+				if (!pirsch_analytics_site_exists(pirsch_analytics_current_url())) {
+					// TODO track event
+					error_log('NOT FOUND: '.pirsch_analytics_current_url());
+					return;
+				} else {
+					$client->pageview($options);
+				}
 			}
 		}
 	} catch(Exception $e) {
@@ -111,4 +123,54 @@ function pirsch_analytics_parse_forwarded_header($header) {
 	}
 
 	return '';
+}
+
+function pirsch_analytics_site_exists($url, $cacheDuration = PIRSCH_SITE_CHECK_CACHE_SECONDS) {
+    $cache_key = 'pirsch_site_check_'.md5($url);
+    $cached_result = get_transient($cache_key);
+    
+    if ($cached_result !== false) {
+        return $cached_result === 'exists';
+    }
+    
+    $exists = pirsch_analytics_site_exists_check($url);
+    set_transient($cache_key, $exists ? 'exists' : 'not_exists', $cacheDuration);
+    return $exists;
+}
+
+function pirsch_analytics_site_exists_check($url) {
+	$response = wp_remote_head($url, array(
+		'timeout'     => 1,
+		'redirection' => 0,
+		'user-agent'  => PIRSCH_SITE_CHECK_USER_AGENT
+	));
+	
+	if (!is_wp_error($response)) {
+		$responseCode = wp_remote_retrieve_response_code($response);
+		
+		if ($responseCode >= 200 && $responseCode < 300) {
+			return true;
+		}
+	}
+    
+    return false;
+}
+
+function pirsch_analytics_clear_site_cache() {
+    if (current_user_can('manage_options')) {
+        pirsch_analytics_clear_site_cache_all();
+        wp_send_json_success('Cache cleared');
+    } else {
+        wp_send_json_error('Insufficient permissions');
+    }
+}
+
+function pirsch_analytics_clear_site_cache_all() {
+    global $wpdb;
+    $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name ILIKE 'pirsch_site_check_%'");
+}
+
+function pirsch_analytics_current_url() {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+    return $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 }

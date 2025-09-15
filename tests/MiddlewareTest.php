@@ -23,7 +23,7 @@ final class MiddlewareTest extends TestCase {
 
     public function testIsExcluded(): void {
         function get_option($option) {
-            return '/foo\n/bar\n'.PIRSCH_FILTER_REGEX_PREFIX.'^\/filter\/page\/.*$';
+            return "/foo\n/bar\n".PIRSCH_FILTER_REGEX_PREFIX."^\/filter\/page\/.*$";
         }
 
         $tests = array(
