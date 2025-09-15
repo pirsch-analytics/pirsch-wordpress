@@ -40,9 +40,13 @@ function pirsch_analytics_middleware() {
 					}
 				}
 
-				if (!pirsch_analytics_site_exists(pirsch_analytics_current_url())) {
-					// TODO track event
-					error_log('NOT FOUND: '.pirsch_analytics_current_url());
+				$url = pirsch_analytics_current_url();
+
+				if (!pirsch_analytics_site_exists($url)) {
+					if (!empty(get_option('pirsch_analytics_custom_event_404'))) {
+						$client->event('Page Not Found', 0, array('url' => $url), $options);
+					}
+
 					return;
 				} else {
 					$client->pageview($options);

@@ -4,6 +4,7 @@ function pirsch_analytics_activate() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_script_disable_page_views');
 	update_option('pirsch_analytics_ignore_logged_in', 'on');
 	update_option('pirsch_analytics_script_disable_page_views', 'on');
+	update_option('pirsch_analytics_custom_event_404', 'on');
 }
 
 function pirsch_analytics_uninstall() {
@@ -16,6 +17,7 @@ function pirsch_analytics_uninstall() {
 	delete_option('pirsch_analytics_add_script');
 	delete_option('pirsch_analytics_script_disable_page_views');
 	delete_option('pirsch_analytics_identification_code');
+	delete_option('pirsch_analytics_custom_event_404');
 }
 
 function pirsch_analytics_settings_page_init() {
@@ -28,6 +30,7 @@ function pirsch_analytics_settings_page_init() {
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_add_script');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_script_disable_page_views');
 	register_setting('pirsch_analytics_page', 'pirsch_analytics_identification_code');
+	register_setting('pirsch_analytics_page', 'pirsch_analytics_custom_event_404');
 
 	// embedded dashboard
 	add_settings_section(
@@ -102,6 +105,16 @@ function pirsch_analytics_settings_page_init() {
 		'pirsch_analytics_tracking',
 		[
 			'label_for' => 'pirsch_analytics_ignore_logged_in'
+		]
+	);
+	add_settings_field(
+		'pirsch_analytics_custom_event_404',
+		__('Track Custom Event for Pages That Do Not Exist', 'pirsch_analytics'),
+		'pirsch_analytics_custom_event_404_callback',
+		'pirsch_analytics_page',
+		'pirsch_analytics_tracking',
+		[
+			'label_for' => 'pirsch_analytics_custom_event_404'
 		]
 	);
 
@@ -184,6 +197,11 @@ function pirsch_analytics_iframe_url_callback() {
 function pirsch_analytics_disabled_callback() {
 	$value = get_option('pirsch_analytics_disabled');
 	echo '<input type="checkbox" name="pirsch_analytics_disabled" id="pirsch_analytics_disabled" '.($value == 'on' ? 'checked' : '').' />';
+}
+
+function pirsch_analytics_custom_event_404_callback() {
+	$value = get_option('pirsch_analytics_custom_event_404');
+	echo '<input type="checkbox" name="pirsch_analytics_custom_event_404" id="pirsch_analytics_custom_event_404" '.($value == 'on' ? 'checked' : '').' />';
 }
 
 function pirsch_analytics_ignore_logged_in_callback() {
