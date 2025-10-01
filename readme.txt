@@ -4,7 +4,7 @@ Tags: pirsch, analytics, server-side, web
 Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: MIT
 License URI: https://github.com/pirsch-analytics/pirsch-wordpress/blob/master/LICENSE
 
@@ -30,6 +30,10 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 2. A simple and easy to use configuration page for your privacy-friendly web analytics.
 
 == Changelog ==
+
+= 2.1.1 =
+
+- increased priority of JS snippet handler to get around cache plugins
 
 = 2.1.0 =
 
