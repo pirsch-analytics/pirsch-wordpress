@@ -119,7 +119,7 @@ function pirsch_analytics_settings_page_init() {
 	);
 
 	// client-side tracking
-		add_settings_section(
+	add_settings_section(
 		'pirsch_analytics_snippet',
 		__('JavaScript Snippet', 'pirsch_analytics'),
 		NULL,
@@ -159,7 +159,12 @@ function pirsch_analytics_settings_page_init() {
 
 function pirsch_analytics_client_access_key_callback() {
 	$value = get_option('pirsch_analytics_client_access_key', '');
-	echo '<input type="password" name="pirsch_analytics_client_access_key" value="'.esc_attr($value).'" id="pirsch_analytics_client_access_key" />';
+	echo '<input type="password" name="pirsch_analytics_client_access_key" value="'.esc_attr($value).'" id="pirsch_analytics_client_access_key" />
+	<p style="font-style: italic;">
+		Setting a client access key sends a page view from the server for every request.
+		If you also add the JavaScript snippet below, make sure "Disable Page View Tracking" is checked
+		for the script, otherwise every page view will be counted twice.
+	</p>';
 }
 
 function pirsch_analytics_header_callback() {

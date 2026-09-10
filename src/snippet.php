@@ -4,7 +4,9 @@ function pirsch_analytics_snippet() {
 
     if (empty(get_option('pirsch_analytics_disabled')) &&
         !empty($ic) &&
-        !empty(get_option('pirsch_analytics_add_script'))) {
+        !empty(get_option('pirsch_analytics_add_script')) &&
+        !pirsch_analytics_ignore_logged_in_user() &&
+        !pirsch_analytics_is_excluded()) {
         ?>
         <script defer src="https://api.pirsch.io/pa.js"
             id="pianjs"
