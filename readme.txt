@@ -31,6 +31,12 @@ Please refer to our website for our [terms and conditions](https://pirsch.io/ter
 
 == Changelog ==
 
+= 2.2.0 =
+
+* removed loopback to check for non-existing pages (404)
+* honor ingore_logged_in and path_filter for snippets
+* added snippet tracking note to the UI
+
 = 2.1.1 =
 
 - increased priority of JS snippet handler to get around cache plugins
